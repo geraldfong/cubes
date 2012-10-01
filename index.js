@@ -14,14 +14,14 @@ $(function() {
   function init() {
     var r, g, b, hexColor;
 
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 2500 );
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 4500 );
     camera.position.z = 1000;
 
     scene = new THREE.Scene();
     projector = new THREE.Projector();
 
-    for (var i = 0; i < 40; i++) {
-      geometry = new THREE.CubeGeometry( 200, 200, 200 );
+    for (var i = 0; i < 170; i++) {
+      geometry = new THREE.CubeGeometry( 50 + Math.random() * 100, 50 + Math.random() * 100, 50 + Math.random() * 100 );
 
       r = Math.floor(Math.random() * 255);
       g = Math.floor(Math.random() * 255) * 256;
@@ -35,20 +35,20 @@ $(function() {
       mesh.drx = 0.01 + 0.03 * Math.random();
       mesh.dry = 0.02 + 0.06 * Math.random();
       mesh.drz = 0.01 + 0.03 * Math.random();
-      mesh.xtheta = 20 + 40 * Math.random();
-      mesh.ytheta = 20 + 40 * Math.random();
-      mesh.ztheta = 20 + 40 * Math.random();
-      mesh.xmag = 400 + 500 * Math.random();
+      mesh.xtheta = 40 + 80 * Math.random();
+      mesh.ytheta = 40 + 80 * Math.random();
+      mesh.ztheta = 40 + 80 * Math.random();
+      mesh.xmag = 400 + 1500 * Math.random();
       mesh.ymag = 200 + 200 * Math.random();
-      mesh.zmag = 400 + 500 * Math.random();
+      mesh.zmag = 400 + 1500 * Math.random();
       scene.add( mesh );
     }
 
     groundMaterial = new THREE.MeshBasicMaterial({color: 0x00aaaa, wireframe: true});
-    ground = new THREE.Mesh(new THREE.CubeGeometry(2000, 2000, 10, 15, 15), groundMaterial);
+    ground = new THREE.Mesh(new THREE.CubeGeometry(4500, 4500, 10, 12, 12), groundMaterial);
     scene.add(ground);
     ground.rotation.x = Math.PI/2;
-    ground.position.y = -400;
+    ground.position.y = -500;
 
 
     renderer = new THREE.CanvasRenderer();
