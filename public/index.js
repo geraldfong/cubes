@@ -4,11 +4,14 @@ $(function() {
   var t = 0;
   var projector;
   var score = 0;
+  var expandVel = 1;
   
 
   var cubes = [];
+  var expand = false;
 
   init();
+  pollServer();
   animate();
 
   function init() {
@@ -20,7 +23,7 @@ $(function() {
     scene = new THREE.Scene();
     projector = new THREE.Projector();
 
-    for (var i = 0; i < 170; i++) {
+    for (var i = 0; i < 150; i++) {
       geometry = new THREE.CubeGeometry( 50 + Math.random() * 100, 50 + Math.random() * 100, 50 + Math.random() * 100 );
 
       r = Math.floor(Math.random() * 255);
@@ -55,22 +58,36 @@ $(function() {
     renderer.setSize( window.innerWidth, window.innerHeight );
 
     document.body.appendChild( renderer.domElement );
-
-
   }
 
+  function pollServer() {
+    $.get("http://geraldfong.com:1500/query", function(data, blah) {
+      var val = parseFloat(data);
+      expand = val > 2;
+    });
+    setTimeout(pollServer, 20);
+  }
   function animate() {
 
     // note: three.js includes requestAnimationFrame shim
     requestAnimationFrame( animate );
     for (var i = 0 ; i < cubes.length; i++) {
       var mesh = cubes[i];
-      mesh.rotation.x += mesh.drx;
-      mesh.rotation.y += mesh.dry;
-      mesh.rotation.z += mesh.drz;
+      //mesh.rotation.x += mesh.drx;
+      //mesh.rotation.y += mesh.dry;
+      //mesh.rotation.z += mesh.drz;
       mesh.position.x = mesh.xmag * Math.cos(t/mesh.xtheta);
       mesh.position.y = mesh.ymag * Math.sin(t/mesh.ytheta);
       mesh.position.z = mesh.zmag * Math.cos(t/mesh.ztheta);
+      if (expand) {
+        expandVel = Math.min(expandVel + 0.00001, 1.05);
+      } else {
+        expandVel = Math.max(expandVel - 0.00002, 0.99);
+      }
+      var minMag = 150;
+      mesh.xmag = Math.min(Math.max(mesh.xmag * expandVel, minMag), 1300);
+      mesh.ymag = Math.min(Math.max(mesh.ymag * expandVel, minMag), 1300);
+      mesh.zmag = Math.min(Math.max(mesh.zmag * expandVel, minMag), 1300);
 
     }
     camera.position.z = 1000 * Math.cos(t/100);
@@ -79,8 +96,8 @@ $(function() {
 
     renderer.render( scene, camera );
     t++;
-
   }
+
   document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
   function onDocumentMouseDown( event ) {

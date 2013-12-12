@@ -3,6 +3,11 @@ var app = express();
 
 var amplitude = 0;
 
+app.configure(function (){
+  app.use(express.static(__dirname + '/public'));
+});
+
+
 app.get('/eeg', function (req, res) {
   console.log(req.url);
   amplitude = req.query.amplitude;
@@ -13,7 +18,7 @@ app.get('/query', function (req, res) {
   console.log(req.url);
   res.send(amplitude);
 });
-
+console.log("Starting on 1500");
 app.listen(1500);
 /*
 app.get('/shooter/api', function(req, res) {
